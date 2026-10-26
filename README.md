@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/jolars/arity-r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jolars/arity-r/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/arity)](https://CRAN.R-project.org/package=arity)
 <!-- badges: end -->
 
 `arity` provides R bindings to the formatter behind
@@ -13,18 +15,84 @@
 [`arity-formatter`](https://docs.rs/arity-formatter) Rust crate; it does
 not invoke the `arity` command-line interface.
 
+## Installation
+
+### CRAN version
+
+``` r
+install.packages("arity")
+```
+
+### Development Version
+
+``` r
+devtools::install_github("jolars/arity-r")
+```
+
+## Usage
+
 Format source held in memory:
 
 ``` r
 library(arity)
 
 format_text("x<-(1+2)*3^4\n")
+#> [1] "x <- (1 + 2) * 3^4\n"
 ```
-
-    ## [1] "x <- (1 + 2) * 3^4\n"
 
 Or format one file in place:
 
 ``` r
 changed <- format_file("R/example.R")
 ```
+
+## Configuration
+
+Arity automatically reads the nearest `arity.toml`, searching upward
+from the file’s directory for `format_file()` or the working directory
+for `format_text()`. The search includes the repository root and stops
+there if it contains a `.git` file or directory. Otherwise, it continues
+to the filesystem root. For example:
+
+``` toml
+[format]
+line-width = 100
+indent-width = 2
+line-ending = "auto"
+```
+
+If no project configuration is found, `ARITY_CONFIG` can name a fallback
+file. Configuration files are not merged, and missing settings use the
+built-in defaults: a line width of 80, an indentation width of 2, and
+automatic line endings. Explicit formatting arguments override the
+selected configuration.
+
+``` r
+format_file("R/example.R", line_width = 100)
+format_file("R/example.R", config = FALSE)
+format_file("R/example.R", config = "other.toml")
+```
+
+`config = FALSE` ignores project and fallback configuration. An explicit
+path skips discovery and the fallback. Relative configuration paths use
+the working directory. Invalid formatting configuration produces an
+error before changing the source. Settings for other CLI operations,
+such as file exclusions and linting, have no effect in the R package.
+
+## RStudio addin
+
+After installing the package, choose **Format with arity** from
+RStudio’s **Addins** menu. The addin formats selected R code, or the
+whole document when nothing is selected. To assign a keyboard shortcut,
+open **Tools \> Modify Keyboard Shortcuts** and search for **Format with
+arity**.
+
+The addin works with unsaved edits and untitled R scripts. It preserves
+the initial indentation of selected code and leaves changes in the
+editor for you to save. Whole-document formatting supports R scripts and
+`.Rprofile` files. For R Markdown or Quarto documents, select complete R
+expressions in the source editor.
+
+The addin discovers configuration from the document’s directory, or the
+working directory for untitled buffers, using the same rules as the
+formatting functions. Syntax verification is enabled.

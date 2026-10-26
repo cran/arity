@@ -1,6 +1,6 @@
 Package: arity
 Title: Format R Code with Arity
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(
       "Johan",
@@ -16,7 +16,8 @@ License: MIT + file LICENSE
 URL: https://github.com/jolars/arity-r, https://arity.cc
 BugReports: https://github.com/jolars/arity-r/issues
 Depends: R (>= 4.2)
-Suggests: testthat (>= 3.0.0)
+Imports: rstudioapi (>= 0.5), utils
+Suggests: testthat (>= 3.2.0), withr
 Config/rextendr/version: 0.5.0
 Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
@@ -24,9 +25,9 @@ Encoding: UTF-8
 Language: en-US
 SystemRequirements: Cargo (Rust's package manager), rustc >= 1.89.0
 NeedsCompilation: yes
-Packaged: 2026-09-01 19:07:21 UTC; jola
+Packaged: 2026-10-26 12:56:37 UTC; jola
 Author: Johan Larsson [aut, cre, cph] (ORCID:
     <https://orcid.org/0000-0002-4029-5945>)
 Maintainer: Johan Larsson <johan@jolars.co>
 Repository: CRAN
-Date/Publication: 2026-09-25 22:30:09 UTC
+Date/Publication: 2026-10-26 19:50:15 UTC
